@@ -6,6 +6,7 @@ import {
   UsePipes,
   Request,
   Get,
+  SetMetadata,
 } from '@nestjs/common';
 import { CreateUserDto, createUserDto } from '../user/user.dto';
 import { DtoValidation } from '../core';
@@ -13,6 +14,7 @@ import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { loginDto } from './auth.dto';
+import { Role, Roles } from './authorization';
 
 @Controller('auth')
 export class AuthContoller {
@@ -29,10 +31,12 @@ export class AuthContoller {
   }
 
   @Get('profile')
+  @Roles(Role.Admin)
   getProfile(@Request() req) {
     return req.user;
   }
 
+  @SetMetadata('isPublic', true)
   @Post('signup')
   @UsePipes(new DtoValidation(createUserDto))
   async signup(@Body() createUserDto: CreateUserDto) {

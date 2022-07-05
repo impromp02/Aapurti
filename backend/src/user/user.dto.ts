@@ -1,3 +1,4 @@
+import { Role } from '../auth/authorization';
 import { z } from 'zod';
 
 export const createUserDto = z.object({
@@ -6,7 +7,8 @@ export const createUserDto = z.object({
   username: z.string(),
   password: z.string().min(8),
   mobile: z.string(),
-  email: z.string().email().optional(),
+  email: z.string().email(),
+  roles: z.array(z.nativeEnum(Role)),
 });
 
 export type CreateUserDto = z.infer<typeof createUserDto>;
